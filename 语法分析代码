@@ -1,0 +1,166 @@
+#include<stdio.h>
+#include <ctype.h>
+#include<string.h>
+#include<stdlib.h>
+
+void A();  
+void E();  
+void T();  
+void E1(); 
+void T1(); 
+void F();  
+void V();  
+void fa();
+
+char s[50],n='1',s1[50][3];  
+int feng,sym,le=0,cnt=0;  
+
+void fa()
+{
+	le=0;
+	feng=0;
+	
+}
+
+void A()  
+{
+    V();
+    if(s[sym]==':'&&s[sym+1]=='=') 
+    {
+       sym=sym+2;
+       E();
+       printf("%s:=%s",s1[cnt-2],s1[cnt-1]);
+       printf("     (:=,%s,-,%s)\n",s1[cnt-1],s1[cnt-2]);
+    }
+   
+}
+
+void V()  
+{
+    if(islower(s[sym]))
+    {
+        s1[cnt][0] = s[sym];              
+        s1[cnt][1] = '\0';               
+        cnt++;
+        sym++;
+    }
+   
+}
+
+void E1()              
+{
+    int p;
+    if(feng==0)
+    {
+        if(s[sym] == '+'||s[sym]=='-')
+        {
+            p=sym;                  
+            sym++;
+            T();
+            char ch[3];
+            ch[0] = 'T';
+            ch[1] = n;
+            ch[2] = '\0';
+            if(s[p] == '+')
+            {
+                 printf("%s:=%s+%s",ch,s1[cnt-2],s1[cnt-1]);                
+                 printf("     (+,%s,%s,%s)\n", s1[cnt-2],s1[cnt-1],ch);            
+            }
+        else
+        {
+            printf("%s:=%s-%s",ch,s1[cnt-2],s1[cnt-1]);              
+            printf("     (-,%s,%s,%s)\n", s1[cnt-2],s1[cnt-1],ch);        
+        }
+        strcpy(s1[cnt-2],ch);         
+        cnt--;
+        n++;
+        E1();
+       }
+    }
+}
+
+void T1() 
+{
+    int p;
+    if(feng==0)
+    {
+        if(s[sym] == '*'||s[sym]=='/')
+        {
+             p=sym;
+             sym++;
+             F();
+             char ch[3];
+             ch[0] = 'T';
+             ch[1] = n;
+             ch[2] = '\0';
+             if(s[p] == '*')
+             {
+                  printf("%s:=%s*%s",ch,s1[cnt-2],s1[cnt-1]);  
+                  printf("     (*,%s,%s,%s)\n", s1[cnt-2],s1[cnt-1],ch);
+             }
+        else
+        {
+             printf("%s:=%s/%s",ch,s1[cnt-2],s1[cnt-1]);  
+             printf("     (/,%s,%s,%s)\n", s1[cnt-2],s1[cnt-1],ch);
+        }
+        strcpy(s1[cnt-2],ch);      
+        cnt--;
+        n++;
+        T1();
+        }
+    }
+}
+
+void F()    
+{
+    if(feng==0)
+    {
+        if(s[sym]=='(')
+        {
+            sym++;
+            E();
+            if(s[sym]==')')
+            {sym++;}
+			else
+            {printf("ERROR!出错\n");
+                feng=1;le=1;
+			
+                exit(0);}
+        }
+        else if(islower(s[sym]))  
+        V();
+        else
+        {
+            printf("ERROR!出错\n");
+            feng=1;le=1;
+            exit(0);
+        }
+    }
+}
+
+void E()   
+{
+    if(feng==0)
+    {
+        T();
+        E1();
+    }
+}
+
+void T()  
+{
+    if(feng==0)
+    {
+        F();
+        T1();
+    }
+}
+
+int main()
+{
+	fa();
+    scanf("%s",s);
+    A();
+	system("pause");
+    return 0;
+}
