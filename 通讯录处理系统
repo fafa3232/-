@@ -1,0 +1,452 @@
+#include <bits/stdc++.h>
+#define len sizeof(struct txl)
+using namespace std;
+
+struct txl                             //建立关于通讯录的结构体
+{
+    char num[10];
+    char name[30];
+    char sex[5];
+    int age;
+    char tnumber[15];                 //电话号
+    char jiguan[50];
+    char gzdanwei[50];                 //工作单位
+    char home[50];
+    char txdizhi[50];
+    int youbian;
+    struct txl* next;
+};
+
+
+txl *wendangduru()
+{
+    FILE *q;
+    q=fopen("通讯录.txt","r");
+    txl *p=NULL,*pre;
+    txl *head=NULL;
+    while(!feof(q))
+    {
+        p=(struct txl*)malloc(len);
+        fscanf(q,"%s %s %s %d %s %s %s %s %s %d",p->num,p->name,p->sex,&p->age,p->tnumber,p->jiguan,p->gzdanwei,p->home,p->txdizhi,&p->youbian);
+        if(head==0) head=p;
+        else pre->next=p;
+        pre=p;
+    }
+    for(p=head,pre=head;p->next!=0;pre=p,p=p->next);
+    pre->next=0;
+    return head;
+}
+
+char Findmenue()                                   //查找菜单
+{
+    char a;
+    cout<<"输入查找内容:"<<endl;
+    cout<<"       1.按序号查询；"<<endl;
+    cout<<"       2.按人名查询；"<<endl;
+    cout<<"       3.按性别查询；"<<endl;
+    cout<<"输入查询方式："<<endl;
+    cout<<"请输入:";
+    cin>>a;
+    return a;
+}
+
+txl* Input()                                          //输入函数
+{
+    txl* head=NULL;
+    char key;                    //指令
+    txl *pre=NULL;
+    for(;;)
+    {
+        txl *p=new txl;
+        cout<<"请输入序号:";
+        cin>>p->num;
+        cout<<endl<<"请输入姓名:";
+        cin>>p->name;
+        cout<<endl<<"请输入性别:";
+        cin>>p->sex;
+        cout<<endl<<"请输入年龄:";
+        cin>>p->age;
+        cout<<endl<<"请输入电话号:";
+        cin>>p->tnumber;
+        cout<<endl<<"请输入籍贯:";
+        cin>>p->jiguan;
+        cout<<endl<<"请输入工作单位:";
+        cin>>p->gzdanwei;
+        cout<<endl<<"请输入家庭住址:";
+        cin>>p->home;
+        cout<<endl<<"请输入通讯地址:";
+        cin>>p->txdizhi;
+        cout<<endl<<"请输入邮编:";
+        cin>>p->youbian;
+        cout<<"输入成功"<<endl;
+        cout<<"继续输入请按1"<<endl;
+        cout<<"结束输入请按其他任意键"<<endl;
+        p->next=NULL;
+        if(head==NULL)
+            head=p;
+        else
+           pre->next=p;
+        pre=p;
+        cin>>key;
+        if(key!='1') break;                 //判断是否继续
+
+
+    }
+
+    return head;
+
+}
+
+void Display(txl *head)                                   //显示函数
+{
+    txl *p=NULL;
+    p=head;
+    cout<<setw(15)<<setiosflags(ios::left)<<"序号"<<setw(15)<<"姓名"<<setw(15)<<"性别";
+    cout<<setw(15)<<"年龄"<<setw(15)<<"电话号"<<setw(15)<<"籍贯";
+    cout<<setw(15)<<"工作单位"<<setw(15)<<"家庭住址"<<setw(15)<<"通信地址";
+    cout<<setw(15)<<"邮编"<<endl;
+    while(p!=NULL)
+    {
+        cout<<setw(15)<<p->num<<setw(15)<<p->name;
+        cout<<setw(15)<<p->sex<<setw(15)<<p->age;
+        cout<<setw(15)<<p->tnumber<<setw(15)<<p->jiguan;
+        cout<<setw(15)<<p->gzdanwei<<setw(15)<<p->home;
+        cout<<setw(15)<<p->txdizhi<<setw(15)<<p->youbian<<endl;
+        p=p->next;
+    }
+}
+
+txl *Modify(txl *head)                                //修改函数
+{
+    char aim[30];                                           //修改对象
+    int i,key,flag=0;
+    txl* p=NULL;
+
+    cout<<"请输入修改人的序号或姓名"<<endl;
+    for(;;)
+    {
+        cin>>aim;
+        for(p=head;p!=NULL;p=p->next)
+        {
+            if((strcmp(p->name,aim)==0)||(strcmp(p->num,aim)==0))
+            {
+                flag++;
+                cout<<"**********选择要修改的数据**********"<<endl;
+                cout<<"*          1.修改序号              *"<<endl;
+                cout<<"*          2.修改姓名              *"<<endl;
+                cout<<"*          3.修改性别              *"<<endl;
+                cout<<"*          4.修改年龄              *"<<endl;
+                cout<<"*          5.修改电话号            *"<<endl;
+                cout<<"*          6.修改籍贯              *"<<endl;
+                cout<<"*          7.修改工作单位          *"<<endl;
+                cout<<"*          8.修改家庭住址          *"<<endl;
+                cout<<"*          9.修改通讯地址          *"<<endl;
+                cout<<"*          10.修改邮编             *"<<endl;
+                cout<<"************************************"<<endl;
+
+                cout<<"请输入指令:";
+                cin>>i;
+
+                if(i<=0||i>10)
+                {
+                    cout<<"指令错误，请重新输入:";
+                    cin>>i;
+                }
+
+                switch(i)
+                {
+                    case 1:cout<<"请输入修改后的序号:";
+                            cin>>p->num;break;
+                    case 2:cout<<"请输入修改后的姓名";
+                            cin>>p->name;break;
+                    case 3:cout<<"请输入修改后的性别";
+                            cin>>p->sex;break;
+                    case 4:cout<<"请输入修改后的年龄";
+                            cin>>p->age;break;
+                    case 5:cout<<"请输入修改后的电话号";
+                            cin>>p->tnumber;break;
+                    case 6:cout<<"请输入修改后的籍贯";
+                            cin>>p->jiguan;break;
+                    case 7:cout<<"请输入修改后的工作单位";
+                            cin>>p->gzdanwei;break;
+                    case 8:cout<<"请输入修改后的家庭住址";
+                            cin>>p->home;break;
+                    case 9:cout<<"请输入修改后的通讯地址";
+                            cin>>p->txdizhi;break;
+                    case 10:cout<<"请输入修改后的邮编";
+                            cin>>p->youbian;break;
+                }
+            }
+
+        }
+        if(flag!=0)
+        {
+            cout<<"修改成功"<<endl;
+            cout<<"是否继续修改：1.是 2.否"<<endl;
+
+            cin>>key;
+            if(key==2)  break;
+            cout<<"请输入修改人的姓名或序号"<<endl;
+            flag=0;
+        }
+        else if(flag==0)
+        {
+            cout<<"查无此人，请重新输入";
+            cout<<"若想退出修改界面，请输入0";
+            cin>>key;
+            if(key==0)  break;
+        }
+
+    }
+
+
+    return head;
+}
+
+void Find(txl* head)                                //查找函数
+{
+    int key,flag=0;                           //判断标志
+    char name[30],b[30];
+    char sex[5],a;
+    txl *p=head;
+    for(;;)
+    {
+        a=Findmenue();                       //调用查询菜单
+        if(a=='1')                            //按序号查询功能实现模块
+        {
+            cout<<"输入要查询序号:";
+            cin>>b;
+            cout<<setw(15)<<setiosflags(ios::left)<<"序号"<<setw(15)<<"姓名"<<setw(15)<<"性别";
+            cout<<setw(15)<<"年龄"<<setw(15)<<"电话号"<<setw(15)<<"籍贯";
+            cout<<setw(15)<<"工作单位"<<setw(15)<<"家庭住址"<<setw(15)<<"通信地址";
+            cout<<setw(15)<<"邮编"<<endl;
+            for(p=head;p!=NULL;p=p->next)
+            {
+                if(strcmp(b,p->num)==0)
+                {
+                    flag++;
+                    cout<<setw(15)<<p->num<<setw(15)<<p->name;
+                    cout<<setw(15)<<p->sex<<setw(15)<<p->age;
+                    cout<<setw(15)<<p->tnumber<<setw(15)<<p->jiguan;
+                    cout<<setw(15)<<p->gzdanwei<<setw(15)<<p->home;
+                    cout<<setw(15)<<p->txdizhi<<setw(15)<<p->youbian<<endl;
+                    break;
+                }
+            }
+            if(flag==0)
+            {
+                cout<<"查无此人"<<endl;break;
+            }
+        }
+        else if(a=='2')
+        {
+            cout<<"输入要查询的姓名:";
+            cin>>name;
+            cout<<setw(15)<<setiosflags(ios::left)<<"序号"<<setw(15)<<"姓名"<<setw(15)<<"性别";
+            cout<<setw(15)<<"年龄"<<setw(15)<<"电话号"<<setw(15)<<"籍贯";
+            cout<<setw(15)<<"工作单位"<<setw(15)<<"家庭住址"<<setw(15)<<"通信地址";
+            cout<<setw(15)<<"邮编"<<endl;
+            for(p=head;p!=NULL;p=p->next)
+            {
+                if(strcmp(name,p->name)==0)
+               {
+                   flag++;
+                    cout<<setw(15)<<p->num<<setw(15)<<p->name;
+                    cout<<setw(15)<<p->sex<<setw(15)<<p->age;
+                    cout<<setw(15)<<p->tnumber<<setw(15)<<p->jiguan;
+                    cout<<setw(15)<<p->gzdanwei<<setw(15)<<p->home;
+                    cout<<setw(15)<<p->txdizhi<<setw(15)<<p->youbian<<endl;
+                    break;
+               }
+            }
+            if(flag==0)
+            {
+                cout<<"查无此人"<<endl;break;
+            }
+        }
+        else if(a=='3')
+        {
+            cout<<"输入要查询的性别:";
+            cin>>sex;
+            cout<<setw(15)<<setiosflags(ios::left)<<"序号"<<setw(15)<<"姓名"<<setw(15)<<"性别";
+            cout<<setw(15)<<"年龄"<<setw(15)<<"电话号"<<setw(15)<<"籍贯";
+            cout<<setw(15)<<"工作单位"<<setw(15)<<"家庭住址"<<setw(15)<<"通信地址";
+            cout<<setw(15)<<"邮编"<<endl;
+            for(p=head;p!=NULL;p=p->next)
+            {
+                if(strcmp(sex,p->sex)==0)
+                {
+                    flag++;
+                    cout<<setw(15)<<p->num<<setw(15)<<p->name;
+                    cout<<setw(15)<<p->sex<<setw(15)<<p->age;
+                    cout<<setw(15)<<p->tnumber<<setw(15)<<p->jiguan;
+                    cout<<setw(15)<<p->gzdanwei<<setw(15)<<p->home;
+                    cout<<setw(15)<<p->txdizhi<<setw(15)<<p->youbian<<endl;
+                    //break;
+                }
+            }
+            if(flag==0)
+            {
+                cout<<"查无此人"<<endl;break;
+            }
+        }
+
+
+            cout<<"查询成功"<<endl;
+            cout<<"结束按0,继续按任意键"<<endl;
+            cin>>key;         //判断是否退出
+            flag=0;
+            if(key== 0 )  break;
+    }
+}
+
+txl* Add(txl *head)                  //添加函数
+{
+        txl *p=NULL;
+        for(p=head;p->next!=NULL;p=p->next);
+        for(;;)
+        {
+            txl *q= new txl;
+            cout<<"请输入序号:";
+            cin>>q->num;
+            cout<<endl<<"请输入姓名:";
+            cin>>q->name;
+            cout<<endl<<"请输入性别:";
+            cin>>q->sex;
+            cout<<endl<<"请输入年龄:";
+            cin>>q->age;
+            cout<<endl<<"请输入电话号:";
+            cin>>q->tnumber;
+            cout<<endl<<"请输入籍贯:";
+            cin>>q->jiguan;
+            cout<<endl<<"请输入工作单位:";
+            cin>>q->gzdanwei;
+            cout<<endl<<"请输入家庭住址:";
+            cin>>q->home;
+            cout<<endl<<"请输入通讯地址:";
+            cin>>q->txdizhi;
+            cout<<endl<<"请输入邮编:";
+            cin>>q->youbian;
+
+            p->next= q;
+
+            cout<<"添加成功"<<endl;
+            cout<<"按0结束,按其他键继续添加"<<endl;
+
+            char key[30], a[2]={'0'};
+            cout<<"请输入指令：";
+            cin>>key;                                         //输入指令
+
+            if (strcmp(key,a)==0) break;            //判断是否继续输入
+        }
+
+        return head;
+}
+
+txl *Delete(txl *head)                                  //删除函数
+{
+    char aim[30];                                       //删除对象
+    int key,flag=0;                          //判断标志
+    txl *p=NULL,*pre=NULL;
+
+    for(;;)
+    {
+        cout<<"请输入序号或姓名：";
+        cin>>aim;
+
+        for(p=head;p!=NULL;p=p->next)
+        {
+            if((strcmp(aim,p->num)==0||strcmp(aim,p->name)==0)&&p==head)          //判断是否存在此人
+            {
+                flag++;
+              head=head->next;
+              cout<<"删除成功"<<endl;
+            }
+            else if((strcmp(aim,p->num)==0||strcmp(aim,p->name)==0))
+            {
+                flag++;
+                pre->next=p->next;
+                cout<<"删除成功"<<endl;
+                break;
+            }
+            else
+                pre=p;
+        }
+        if(flag!=0)
+        {
+            cout<<"继续删除请按1，结束请按0";
+            cin>>key;
+            flag=0;                                       //指令是否继续删除
+            if(key==0)    break;
+        }
+        else if(flag==0)
+        {
+            cout<<"查无此人，请重新输入"<<endl;
+            cout<<"若想退出删除界面，请输入0,继续删除按1";
+            cin>>key;
+            if(key==0)  break;
+        }
+
+    }
+
+    return head;
+}
+
+txl* menue(txl* head)
+{
+    char i;
+    for( ; ;)                                             //  循环执行功能菜单
+  {
+
+    printf("* * * * * *Menue* * * * * *\n");
+    printf("*       a. Input          *\n");                //输入函数
+    printf("*       b. Display        *\n");                //输出函数
+    printf("*       c. Modify         *\n");                //修改函数
+    printf("*       d. Find           *\n");                //查找函数
+    printf("*       e. Add            *\n");                //添加函数
+    printf("*       f. Delete         *\n");                //删除函数
+    printf("*       g. Exit           *\n");                //退出
+    printf("*   Please select a to g  *\n");
+    printf("* * * * * * * * * * * * * *\n");
+    cin>> i;
+    if(i=='g') break;
+    else if (i>='a'&&i<='f')switch(i)
+    {
+
+    case 'a': system("cls");head=Input();break;
+    case 'b': system("cls");Display(head);break;
+    case 'c': system("cls");head=Modify(head);break;
+    case 'd': system("cls");Find(head);break;
+    case 'e': system("cls");head=Add(head); break;
+    case 'f': system("cls");head=Delete(head);break;
+    }
+    else
+        cout<<"输入错误"<<endl;
+  }
+  return head;
+}
+int main()                                                         //文件函数调用，保存数据
+{
+      txl *head=NULL;
+      int x;
+      cout<<"\n\n"<<"**************欢迎使用****************"<<endl;
+      cout<<"是否读档"<<endl;
+      cout<<"1.是，2否"<<endl;
+      cout<<"第一次打开此程序请按2"<<endl;
+      cin>>x;
+      if(x==1)
+        head= wendangduru();
+      head=menue(head);
+      txl *p=new txl;
+
+      cout<<"**************谢谢使用，再见！***************";
+      FILE *l;
+      l=fopen("通讯录.txt","w");
+
+    for(p=head;p!=NULL;p=p->next)
+      fprintf(l,"%s %s %s %d %s %s %s %s %s %d\n",p->num,p->name,p->sex,p->age,p->tnumber,p->jiguan,p->gzdanwei,p->home,p->txdizhi,p->youbian);
+      fclose(l);
+
+        return 0;
+
+}
